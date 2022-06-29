@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "sports-api"
+version = "0.1.0"
+description = "An api to serve various sports information."
+authors = ["Rajan Chauhan <you@example.com>"]
+readme = "README.md"
+packages = [{include = "sports_api"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = "^0.78.0"
+uvicorn = "^0.18.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
