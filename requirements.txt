@@ -10,4 +10,5 @@ h11==0.13.0; python_version >= "3.7" \
 uvicorn==0.18.2 \
     --hash=sha256:c19a057deb1c5bb060946e2e5c262fc01590c6529c0af2c3d9ce941e89bc30e0 \
     --hash=sha256:cade07c403c397f9fe275492a48c1b869efd175d5d8a692df649e6e7e2ed8f4e
-fastapi==0.78.0
+fastapi==0.78.0 \
+    --hash=sha256:15fcabd5c78c266fa7ae7d8de9b384bfc2375ee0503463a6febbe3bab69d6f65
