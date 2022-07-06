@@ -1,8 +1,13 @@
-from fastapi import FastAPI
+import uvicorn
+from football.app import create_app
 
-app = FastAPI()
+app = create_app()
+
+def main():
+    config = uvicorn.Config("main:app", port=8000, log_level="info")
+    server = uvicorn.Server(config)
+    server.run()
 
 
-@app.get("/")
-async def root():
-    return {"message": "Hello World"}
+if __name__ == '__main__':
+    main()
