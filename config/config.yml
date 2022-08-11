@@ -1,0 +1,8 @@
+server:
+  grpc-address: :9001
+  http-address: :8001
+
+database:
+  url:
+
+environment: local

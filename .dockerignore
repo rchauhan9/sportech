@@ -1,0 +1,6 @@
+.idea
+postgres
+
+Procfile
+Makefile
+.gitignore
