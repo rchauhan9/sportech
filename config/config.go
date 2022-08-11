@@ -1,14 +1,9 @@
 package config
 
 type Config struct {
-	Server      ServerConfig
+	Port        string
 	Database    DatabaseConfig
 	Environment string
-}
-
-type ServerConfig struct {
-	GRPCAddress string `mapstructure:"grpc-address"`
-	HTTPAddress string `mapstructure:"http-address"`
 }
 
 type DatabaseConfig struct {

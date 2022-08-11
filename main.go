@@ -34,7 +34,7 @@ func realMain() int {
 	}
 
 	baseHTTPServer := http.Server{
-		Addr:    conf.Server.HTTPAddress,
+		Addr:    ":" + conf.Port,
 		Handler: nil,
 	}
 	defer func() {
@@ -47,7 +47,7 @@ func realMain() int {
 
 	errs := make(chan error, 1)
 	go func() {
-		level.Info(logger).Log("transport", "http", "address", conf.Server.HTTPAddress, "msg", "listening")
+		level.Info(logger).Log("transport", "http", "address", conf.Port, "msg", "listening")
 		if err := baseHTTPServer.ListenAndServe(); err != nil {
 			errs <- err
 		}

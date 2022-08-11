@@ -1,6 +1,4 @@
-server:
-  grpc-address: :9001
-  http-address: :8001
+port: 8001
 
 database:
   url:
