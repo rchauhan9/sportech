@@ -1,7 +1,4 @@
-.PHONY: run requirements
+.PHONY: run
 
 run:
-	gunicorn -w 4 -k uvicorn.workers.UvicornWorker main:app
-
-requirements:
-	poetry export --dev -f requirements.txt --output requirements.txt
+	docker-compose up -d
