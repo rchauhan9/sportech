@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  sportech-db:
+    extends:
+      file: postgres/docker-compose.yml
+      service: postgres
+    networks:
+      - platform
+
+networks:
+  platform:
+    name: platform

@@ -7,10 +7,10 @@ import (
 	"github.com/go-kit/log"
 	"github.com/go-kit/log/level"
 	"github.com/pkg/errors"
-	"github.com/rchauhan9/sportech/commons/go/configutil"
-	"github.com/rchauhan9/sportech/config"
-	"github.com/rchauhan9/sportech/middleware"
-	"github.com/rchauhan9/sportech/team"
+	"github.com/rchauhan9/sportech/platform/commons/go/configutil"
+	"github.com/rchauhan9/sportech/platform/commons/go/middleware"
+	"github.com/rchauhan9/sportech/platform/team-service/config"
+	team2 "github.com/rchauhan9/sportech/platform/team-service/team"
 	"net/http"
 	"os"
 	"os/signal"
@@ -38,13 +38,13 @@ func realMain() int {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/health", health)
 
-	teamRepository := team.NewRepository()
-	teamService := team.NewService(teamRepository)
-	listTeamsEndpoint := team.MakeListTeamsEndpoint(teamService)
+	teamRepository := team2.NewRepository()
+	teamService := team2.NewService(teamRepository)
+	listTeamsEndpoint := team2.MakeListTeamsEndpoint(teamService)
 	listTeamsEndpoint = middleware.AddLogging(listTeamsEndpoint, logger)
-	getTeamEndpoint := team.MakeGetTeamEndpoint(teamService)
+	getTeamEndpoint := team2.MakeGetTeamEndpoint(teamService)
 	getTeamEndpoint = middleware.AddLogging(getTeamEndpoint, logger)
-	teamHandler := team.MakeHandler(listTeamsEndpoint, getTeamEndpoint)
+	teamHandler := team2.MakeHandler(listTeamsEndpoint, getTeamEndpoint)
 	mux.Handle("/api/v1/teams/", teamHandler)
 
 	baseHTTPServer := http.Server{
