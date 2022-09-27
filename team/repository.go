@@ -3,6 +3,7 @@ package team
 import (
 	"context"
 	"github.com/google/uuid"
+	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/pkg/errors"
 	"github.com/thoas/go-funk"
 )
@@ -12,11 +13,13 @@ type Repository interface {
 	GetTeam(ctx context.Context, id string) (Team, error)
 }
 
-func NewRepository() Repository {
-	return &repository{}
+func NewRepository(dbPool *pgxpool.Pool) Repository {
+	return &repository{dbPool}
 }
 
-type repository struct{}
+type repository struct {
+	pool *pgxpool.Pool
+}
 
 var teams = []Team{
 	{uuid.New().String(), "Arsenal Football Club"},
