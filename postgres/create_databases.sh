@@ -3,8 +3,8 @@
 set -eu
 
 DATABASES=(
-  "football"
-  "football_testing"
+  "sportech"
+  "sportech_testing"
 )
 
 _psql() {
