@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+CURRENT_DIR="$(dirname -- ${0})"
+DATABASE_URL="${DATABASE_URL:-postgres://postgres:password@localhost:5432/sportech?sslmode=disable}"
+
+migrate -database "${DATABASE_URL}" -path "${CURRENT_DIR}/migrations" $@

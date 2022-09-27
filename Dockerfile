@@ -11,7 +11,9 @@ RUN GOOS=linux CGO_ENABLED=0 GOARCH=amd64 go build -o sportech main.go
 FROM busybox:latest
 WORKDIR /app
 RUN mkdir config
+RUN mkdir migrations
 COPY --from=builder build/sportech .
 COPY --from=builder build/config ./config
+COPY --from=builder build/migrations ./migrations
 
 CMD ["./sportech"]

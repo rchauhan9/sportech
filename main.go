@@ -6,9 +6,12 @@ import (
 	"fmt"
 	"github.com/go-kit/log"
 	"github.com/go-kit/log/level"
+	_ "github.com/golang-migrate/migrate/v4/database/postgres"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"github.com/pkg/errors"
 	"github.com/rchauhan9/sportech/commons/go/configutil"
 	"github.com/rchauhan9/sportech/config"
+	"github.com/rchauhan9/sportech/database"
 	"github.com/rchauhan9/sportech/middleware"
 	"github.com/rchauhan9/sportech/team"
 	"net/http"
@@ -25,6 +28,7 @@ func realMain() int {
 	ctx := context.Background()
 
 	configPath := flag.String("config-dir", "./config", "Directory containing config.yml")
+	migrationPath := flag.String("migration-dir", "./migrations", "Directory containing migrations")
 	flag.Parse()
 
 	logger := log.NewLogfmtLogger(log.NewSyncWriter(os.Stderr))
@@ -35,10 +39,28 @@ func realMain() int {
 		return 1
 	}
 
+	migrator, err := database.NewMigrator(conf.Database.URL, *migrationPath, logger)
+	if err != nil {
+		panic(errors.Wrap(err, "unable to create migrator"))
+	}
+	if err = migrator.MigrateDb(); err != nil {
+		panic(errors.Wrap(err, "unable to migrate database"))
+	}
+	if err = migrator.Close(); err != nil {
+		level.Error(logger).Log("err", errors.Wrap(err, "error closing migrator"))
+	}
+
+	db, err := database.NewDatabasePool(ctx, conf.Database.URL)
+	if err != nil {
+		level.Error(logger).Log("err", err)
+		return 1
+	}
+	defer db.Close()
+
 	mux := http.NewServeMux()
 	mux.HandleFunc("/health", health)
 
-	teamRepository := team.NewRepository()
+	teamRepository := team.NewRepository(db)
 	teamService := team.NewService(teamRepository)
 	listTeamsEndpoint := team.MakeListTeamsEndpoint(teamService)
 	listTeamsEndpoint = middleware.AddLogging(listTeamsEndpoint, logger)
