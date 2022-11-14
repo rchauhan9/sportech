@@ -1,4 +1,4 @@
-package team
+package teams
 
 import (
 	"context"
@@ -25,8 +25,8 @@ func MakeHandler(listTeamsEndpoint endpoint.Endpoint, getTeamEndpoint endpoint.E
 		encodeGetTeamResponse,
 	)
 
-	r.Handle("/api/v1/teams/{id}", getTeamHandler).Methods("GET")
-	r.Handle("/api/v1/teams/", listTeamsHandler).Methods("GET")
+	r.Handle("/teams/{id}", getTeamHandler).Methods("GET")
+	r.Handle("/teams/", listTeamsHandler).Methods("GET")
 
 	return r
 }

@@ -12,8 +12,13 @@ import (
 	"github.com/rchauhan9/sportech/commons/go/configutil"
 	"github.com/rchauhan9/sportech/config"
 	"github.com/rchauhan9/sportech/database"
+	"github.com/rchauhan9/sportech/leagues"
+	"github.com/rchauhan9/sportech/managers"
 	"github.com/rchauhan9/sportech/middleware"
-	"github.com/rchauhan9/sportech/team"
+	"github.com/rchauhan9/sportech/persons"
+	"github.com/rchauhan9/sportech/players"
+	"github.com/rchauhan9/sportech/stadiums"
+	"github.com/rchauhan9/sportech/teams"
 	"net/http"
 	"os"
 	"os/signal"
@@ -22,6 +27,10 @@ import (
 
 func health(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "ok\n")
+}
+
+func docs(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "GET /teams\nGET /stadiums\n")
 }
 
 func realMain() int {
@@ -59,15 +68,55 @@ func realMain() int {
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/health", health)
+	mux.HandleFunc("/", docs)
 
-	teamRepository := team.NewRepository(db)
-	teamService := team.NewService(teamRepository)
-	listTeamsEndpoint := team.MakeListTeamsEndpoint(teamService)
+	teamRepository := teams.NewRepository(db)
+	teamService := teams.NewService(teamRepository)
+	listTeamsEndpoint := teams.MakeListTeamsEndpoint(teamService)
 	listTeamsEndpoint = middleware.AddLogging(listTeamsEndpoint, logger)
-	getTeamEndpoint := team.MakeGetTeamEndpoint(teamService)
+	getTeamEndpoint := teams.MakeGetTeamEndpoint(teamService)
 	getTeamEndpoint = middleware.AddLogging(getTeamEndpoint, logger)
-	teamHandler := team.MakeHandler(listTeamsEndpoint, getTeamEndpoint)
-	mux.Handle("/api/v1/teams/", teamHandler)
+	teamHandler := teams.MakeHandler(listTeamsEndpoint, getTeamEndpoint)
+	mux.Handle("/teams/", teamHandler)
+
+	stadiumRepository := stadiums.NewRepository(db)
+	stadiumService := stadiums.NewService(stadiumRepository)
+	listStadiumsEndpoint := stadiums.MakeListStadiumsEndpoint(stadiumService)
+	listStadiumsEndpoint = middleware.AddLogging(listStadiumsEndpoint, logger)
+	getStadiumEndpoint := stadiums.MakeGetStadiumEndpoint(stadiumService)
+	getStadiumEndpoint = middleware.AddLogging(getStadiumEndpoint, logger)
+	stadiumHandler := stadiums.MakeHandler(listStadiumsEndpoint, getStadiumEndpoint)
+	mux.Handle("/stadiums/", stadiumHandler)
+
+	leagueRepository := leagues.NewRepository(db)
+	leagueService := leagues.NewService(leagueRepository)
+	listLeaguesEndpoint := leagues.MakeListLeaguesEndpoint(leagueService)
+	listLeaguesEndpoint = middleware.AddLogging(listLeaguesEndpoint, logger)
+	getLeagueEndpoint := leagues.MakeGetLeagueEndpoint(leagueService)
+	getLeagueEndpoint = middleware.AddLogging(getLeagueEndpoint, logger)
+	leagueHandler := leagues.MakeHandler(listLeaguesEndpoint, getLeagueEndpoint)
+	mux.Handle("/leagues/", leagueHandler)
+
+	personsRepository := persons.NewRepository(db)
+	personsService := persons.NewService(personsRepository)
+
+	managerRepository := managers.NewRepository(db)
+	managerService := managers.NewService(managerRepository, personsService)
+	listManagersEndpoint := managers.MakeListManagersEndpoint(managerService)
+	listManagersEndpoint = middleware.AddLogging(listManagersEndpoint, logger)
+	getManagerEndpoint := managers.MakeGetManagerEndpoint(managerService)
+	getManagerEndpoint = middleware.AddLogging(getManagerEndpoint, logger)
+	managerHandler := managers.MakeHandler(listManagersEndpoint, getManagerEndpoint)
+	mux.Handle("/managers/", managerHandler)
+
+	playerRepository := players.NewRepository(db)
+	playerService := players.NewService(playerRepository)
+	listPlayersEndpoint := players.MakeListPlayersEndpoint(playerService)
+	listPlayersEndpoint = middleware.AddLogging(listPlayersEndpoint, logger)
+	getPlayerEndpoint := players.MakeGetPlayerEndpoint(playerService)
+	getPlayerEndpoint = middleware.AddLogging(getPlayerEndpoint, logger)
+	playerHandler := players.MakeHandler(listPlayersEndpoint, getPlayerEndpoint)
+	mux.Handle("/players/", playerHandler)
 
 	baseHTTPServer := http.Server{
 		Addr:    ":" + conf.Port,
