@@ -110,7 +110,7 @@ func realMain() int {
 	mux.Handle("/managers/", managerHandler)
 
 	playerRepository := players.NewRepository(db)
-	playerService := players.NewService(playerRepository)
+	playerService := players.NewService(playerRepository, personsService)
 	listPlayersEndpoint := players.MakeListPlayersEndpoint(playerService)
 	listPlayersEndpoint = middleware.AddLogging(listPlayersEndpoint, logger)
 	getPlayerEndpoint := players.MakeGetPlayerEndpoint(playerService)
