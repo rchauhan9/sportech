@@ -24,10 +24,11 @@ func (r *repository) ListManagers(ctx context.Context) ([]ManagerDB, error) {
 		SELECT
 		    m.id,
 		    m.person_id,
-		    CONCAT('/teams/', m.team),
+		    m.team_id,
 		    m.started,
 		    m.ended
 	    FROM team_managers m
+	    ORDER BY started ASC
 	`
 	rows, err := r.pool.Query(ctx, query)
 	if err != nil {
@@ -39,8 +40,8 @@ func (r *repository) ListManagers(ctx context.Context) ([]ManagerDB, error) {
 		manager := ManagerDB{}
 		if err := rows.Scan(
 			&manager.ID,
-			&manager.Person,
-			&manager.Team,
+			&manager.PersonID,
+			&manager.TeamID,
 			&manager.Started,
 			&manager.Ended,
 		); err != nil {
@@ -56,7 +57,7 @@ func (r *repository) GetManager(ctx context.Context, id string) (ManagerDB, erro
 	    SELECT
 		    m.id,
 		    m.person_id,
-		    CONCAT('/teams/', m.team),
+		    m.team_id,
 		    m.started,
 		    m.ended
 	    FROM team_managers m
@@ -66,8 +67,8 @@ func (r *repository) GetManager(ctx context.Context, id string) (ManagerDB, erro
 	var manager ManagerDB
 	if err := row.Scan(
 		&manager.ID,
-		&manager.Person,
-		&manager.Team,
+		&manager.PersonID,
+		&manager.TeamID,
 		&manager.Started,
 		&manager.Ended,
 	); err != nil {

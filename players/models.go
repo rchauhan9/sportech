@@ -19,8 +19,8 @@ type Player struct {
 
 type PlayerDB struct {
 	ID               string
-	Person           string
-	Team             string
+	PersonID         string
+	TeamID           string
 	SquadNumber      int32
 	GeneralPosition  string
 	SpecificPosition *string

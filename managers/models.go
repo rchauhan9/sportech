@@ -15,9 +15,9 @@ type Manager struct {
 }
 
 type ManagerDB struct {
-	ID      string
-	Person  string
-	Team    string
-	Started time.Time
-	Ended   *time.Time
+	ID       string
+	PersonID string
+	TeamID   string
+	Started  time.Time
+	Ended    *time.Time
 }

@@ -29,9 +29,9 @@ func (r *repository) ListTeams(ctx context.Context) ([]Team, error) {
 		    nickname,
 		    year_founded,
 		    city,
-		    CONCAT('/countries/', country),
-		    CONCAT('/stadiums/', stadium),
-		    CONCAT('/leagues/', league)
+		    country_id,
+		    stadium_id,
+		    league_id
 	    FROM teams
 	`
 	rows, err := r.pool.Query(ctx, query)
@@ -71,9 +71,9 @@ func (r *repository) GetTeam(ctx context.Context, id string) (Team, error) {
 		    nickname,
 		    year_founded,
 		    city,
-		    CONCAT('/countries/', country),
-		    CONCAT('/stadiums/', stadium),
-		    CONCAT('/leagues/', league)
+		    country_id,
+		    stadium_id,
+		    league_id
 	    FROM teams
 	    WHERE id = $1
 	`

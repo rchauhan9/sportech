@@ -88,12 +88,12 @@ func (suite *RepositoryTestSuite) TestListLeagues() {
 	require.NotNil(suite.T(), leagues[0].ID)
 	require.Equal(suite.T(), "La Liga", leagues[0].Name)
 	require.Equal(suite.T(), int32(20), leagues[0].NumberOfTeams)
-	require.Equal(suite.T(), "/countries/"+spain, leagues[0].Country)
+	require.Equal(suite.T(), spain, leagues[0].Country)
 
 	require.NotNil(suite.T(), leagues[1].ID)
 	require.Equal(suite.T(), "Premier League", leagues[1].Name)
 	require.Equal(suite.T(), int32(20), leagues[1].NumberOfTeams)
-	require.Equal(suite.T(), "/countries/"+england, leagues[1].Country)
+	require.Equal(suite.T(), england, leagues[1].Country)
 }
 
 func (suite *RepositoryTestSuite) TestGetLeague() {
@@ -106,12 +106,12 @@ func (suite *RepositoryTestSuite) TestGetLeague() {
 	require.Equal(suite.T(), premierLeagueID, league.ID)
 	require.Equal(suite.T(), "Premier League", league.Name)
 	require.Equal(suite.T(), int32(20), league.NumberOfTeams)
-	require.Equal(suite.T(), "/countries/"+england, league.Country)
+	require.Equal(suite.T(), england, league.Country)
 }
 
 func createLeague(suite *RepositoryTestSuite, name string, numberOfTeams int32, countryID string) string {
 	query := `
-	    INSERT INTO leagues (name, number_of_teams, country)
+	    INSERT INTO leagues (name, number_of_teams, country_id)
 	    VALUES
 	    ($1, $2, $3)
 	    RETURNING id

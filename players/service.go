@@ -37,12 +37,12 @@ func (s *service) ListPlayers(ctx context.Context) ([]Player, error) {
 	for i := range playersDB {
 		players[i] = Player{
 			ID:               playersDB[i].ID,
-			FirstName:        personsMap[playersDB[i].Person].FirstName,
-			MiddleNames:      personsMap[playersDB[i].Person].MiddleNames,
-			LastName:         personsMap[playersDB[i].Person].LastName,
-			DateOfBirth:      personsMap[playersDB[i].Person].DateOfBirth,
-			Nationality:      personsMap[playersDB[i].Person].Nationality,
-			Team:             playersDB[i].Team,
+			FirstName:        personsMap[playersDB[i].PersonID].FirstName,
+			MiddleNames:      personsMap[playersDB[i].PersonID].MiddleNames,
+			LastName:         personsMap[playersDB[i].PersonID].LastName,
+			DateOfBirth:      personsMap[playersDB[i].PersonID].DateOfBirth,
+			Nationality:      personsMap[playersDB[i].PersonID].Nationality,
+			Team:             playersDB[i].TeamID,
 			SquadNumber:      playersDB[i].SquadNumber,
 			GeneralPosition:  playersDB[i].GeneralPosition,
 			SpecificPosition: playersDB[i].SpecificPosition,
@@ -60,7 +60,7 @@ func (s *service) GetPlayer(ctx context.Context, id string) (Player, error) {
 		return Player{}, err
 	}
 
-	person, err := s.personsService.GetPerson(ctx, player.Person)
+	person, err := s.personsService.GetPerson(ctx, player.PersonID)
 	if err != nil {
 		return Player{}, errors.Wrapf(err, "error getting player with id %s", id)
 	}
@@ -72,7 +72,7 @@ func (s *service) GetPlayer(ctx context.Context, id string) (Player, error) {
 		LastName:         person.LastName,
 		DateOfBirth:      person.DateOfBirth,
 		Nationality:      person.Nationality,
-		Team:             player.Team,
+		Team:             player.TeamID,
 		SquadNumber:      player.SquadNumber,
 		GeneralPosition:  player.GeneralPosition,
 		SpecificPosition: player.SpecificPosition,

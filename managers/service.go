@@ -37,12 +37,12 @@ func (s *service) ListManagers(ctx context.Context) ([]Manager, error) {
 	for i := range managersDB {
 		managers[i] = Manager{
 			ID:          managersDB[i].ID,
-			FirstName:   personsMap[managersDB[i].Person].FirstName,
-			MiddleNames: personsMap[managersDB[i].Person].MiddleNames,
-			LastName:    personsMap[managersDB[i].Person].LastName,
-			DateOfBirth: personsMap[managersDB[i].Person].DateOfBirth,
-			Nationality: personsMap[managersDB[i].Person].Nationality,
-			Team:        managersDB[i].Team,
+			FirstName:   personsMap[managersDB[i].PersonID].FirstName,
+			MiddleNames: personsMap[managersDB[i].PersonID].MiddleNames,
+			LastName:    personsMap[managersDB[i].PersonID].LastName,
+			DateOfBirth: personsMap[managersDB[i].PersonID].DateOfBirth,
+			Nationality: personsMap[managersDB[i].PersonID].Nationality,
+			Team:        managersDB[i].TeamID,
 			Started:     managersDB[i].Started,
 			Ended:       managersDB[i].Ended,
 		}
@@ -57,7 +57,7 @@ func (s *service) GetManager(ctx context.Context, id string) (Manager, error) {
 		return Manager{}, err
 	}
 
-	person, err := s.personsService.GetPerson(ctx, manager.Person)
+	person, err := s.personsService.GetPerson(ctx, manager.PersonID)
 	if err != nil {
 		return Manager{}, errors.Wrapf(err, "error getting manager with id %s", id)
 	}
@@ -69,7 +69,7 @@ func (s *service) GetManager(ctx context.Context, id string) (Manager, error) {
 		LastName:    person.LastName,
 		DateOfBirth: person.DateOfBirth,
 		Nationality: person.Nationality,
-		Team:        manager.Team,
+		Team:        manager.TeamID,
 		Started:     manager.Started,
 		Ended:       manager.Ended,
 	}, nil

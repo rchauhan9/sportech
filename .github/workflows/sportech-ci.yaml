@@ -44,8 +44,15 @@ jobs:
         with:
           go-version: 1.18
 
+      - name: Install golang-migrate
+        shell: bash
+        run: |
+          if [[ $(migrate --version 2>&1) != ${{ inputs.golang_migrate_version }} ]]; then
+            curl -L https://github.com/golang-migrate/migrate/releases/download/${{ inputs.golang_migrate_version }}/migrate.linux-amd64.tar.gz | tar xvz -C ${{ inputs.bin_dir }}
+          fi
+
       - name: Build
-        run: go build -v ./...
+        run: make build
 
       - name: Test
-        run: go test -v ./...
+        run: make test

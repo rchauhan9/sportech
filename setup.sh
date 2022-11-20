@@ -4,6 +4,7 @@ set -euo pipefail
 
 trap on_error ERR
 
+PYTHON_VERSION="${PYTHON_VERSION:-3.11.0}"
 GO_VERSION="${GO_VERSION:-1.18.3}"
 
 BREW_TAPS=(
@@ -21,10 +22,16 @@ BREW_FORMULAE=(
   "kubectl"
   "kubectx"
   "pre-commit"
+  "pyenv"
+  "python3"
 )
 
 BREW_CASKS=(
   "docker"
+)
+
+PIP_PACKAGES=(
+  "poetry"
 )
 
 echo_coloured() {
@@ -106,6 +113,13 @@ install_single "brew tap" "${BREW_TAPS[@]}"
 
 install_multi "brew install" "${BREW_FORMULAE[@]}"
 install_multi "brew install --cask" "${BREW_CASKS[@]}"
+
+# Python setup
+
+info "Setting up python..."
+pyenv install --skip-existing "${PYTHON_VERSION}"
+pyenv global "${PYTHON_VERSION}"
+install_multi "pip3 install" "${PIP_PACKAGES[@]}"
 
 # Go setup
 

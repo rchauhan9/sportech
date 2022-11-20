@@ -24,13 +24,14 @@ func (r *repository) ListPlayers(ctx context.Context) ([]PlayerDB, error) {
 		SELECT
 		    id,
 		    person_id,
-		    CONCAT('/teams/', team),
+		    team_id,
 		    squad_number,
 		    general_position,
 		    specific_position,
 		    started,
 		    ended
 	    FROM team_players
+	    ORDER BY started ASC
 	`
 	rows, err := r.pool.Query(ctx, query)
 	if err != nil {
@@ -42,7 +43,8 @@ func (r *repository) ListPlayers(ctx context.Context) ([]PlayerDB, error) {
 		player := PlayerDB{}
 		if err := rows.Scan(
 			&player.ID,
-			&player.Team,
+			&player.PersonID,
+			&player.TeamID,
 			&player.SquadNumber,
 			&player.GeneralPosition,
 			&player.SpecificPosition,
@@ -61,7 +63,7 @@ func (r *repository) GetPlayer(ctx context.Context, id string) (PlayerDB, error)
 	    SELECT
 		    id,
 		    person_id,
-		    CONCAT('/teams/', team),
+		    team_id,
 		    squad_number,
 		    general_position,
 		    specific_position,
@@ -74,7 +76,8 @@ func (r *repository) GetPlayer(ctx context.Context, id string) (PlayerDB, error)
 	var player PlayerDB
 	if err := row.Scan(
 		&player.ID,
-		&player.Team,
+		&player.PersonID,
+		&player.TeamID,
 		&player.SquadNumber,
 		&player.GeneralPosition,
 		&player.SpecificPosition,

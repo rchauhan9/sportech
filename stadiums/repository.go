@@ -26,8 +26,9 @@ func (r *repository) ListStadiums(ctx context.Context) ([]Stadium, error) {
 		    name,
 		    capacity,
 		    city,
-		    CONCAT('/countries/', country)
+		    country_id
 	    FROM stadiums
+	    ORDER BY name ASC
 	`
 	rows, err := r.pool.Query(ctx, query)
 	if err != nil {
@@ -58,7 +59,7 @@ func (r *repository) GetStadium(ctx context.Context, id string) (Stadium, error)
 		    name,
 		    capacity,
 		    city,
-		    CONCAT('/countries/', country)
+		    country_id
 	    FROM stadiums
 	    WHERE id = $1
 	`
