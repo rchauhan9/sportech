@@ -31,6 +31,9 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
+env:
+  BIN_DIR: ~/.local/bin
+
 jobs:
   build:
     name: Build
@@ -44,8 +47,19 @@ jobs:
         with:
           go-version: 1.18
 
+      - name: Setup bin dir
+        shell: bash
+        run: |
+          mkdir -p ${{ env.BIN_DIR }}
+          echo "${{ env.BIN_DIR }}" >> $GITHUB_PATH
+
+      - name: Install golang-migrate
+        shell: bash
+        run: |
+            curl -L https://github.com/golang-migrate/migrate/releases/download/v4.15.2/migrate.linux-amd64.tar.gz | tar xvz -C ${{ env.BIN_DIR }}
+
       - name: Build
-        run: go build -v ./...
+        run: make build
 
       - name: Test
-        run: go test -v ./...
+        run: make test

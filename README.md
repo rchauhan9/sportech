@@ -1,5 +1,5 @@
 # Sportech
-This is a Python FastAPI microservice used to power our Replenishment service.
+This is the monorepo that powers Sportech, the application that powers all things sports data.
 
 ## Setup
 To get started with all the tools needed for development on this project run
